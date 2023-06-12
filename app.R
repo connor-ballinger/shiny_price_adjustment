@@ -12,7 +12,8 @@ series <- read_abs(series_id = "A2303730T") |>
       (value - lag(value, n = 4L)) / lag(value, n = 4L)
     ), 
     year = year(date)
-  )
+  ) |> 
+  filter(year > 1999)
 
 
 ui <- fluidPage(
@@ -45,8 +46,8 @@ ui <- fluidPage(
             inputId = "year_range",
             label = "Year Range",
             min = 2000,
-            max = as.numeric(year(Sys.Date())), 
-            value = c(2010, as.numeric(year(Sys.Date()))),
+            max = max(series$year), 
+            value = c(2010, max(series$year)),
             step = 1,
             sep = ""
           ),
