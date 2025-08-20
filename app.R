@@ -205,10 +205,8 @@ server <- function(input, output) {
   ## ABS Output ----------------------------------------------------------------
   output$tbl_abs <- renderReactable({
     data_abs_out() |> 
-      wrap_reactable(
+      reactable(
         columns = list(Multiplier = colDef(format = colFormat(digits = 4))),
-        table_id = NULL,
-        downloadable = FALSE,
         pagination = FALSE
       )
   })
@@ -233,7 +231,10 @@ server <- function(input, output) {
   ## AIHW Data -----------------------------------------------------------------
   data_aihw_out <- reactive({
     if (is.null(input$aihw_file)) {
-      df_aihw <- fn_clean_aihw(file = "aihw.xlsx", sheet = input$sheet_name)
+      df_aihw <- fn_clean_aihw(
+        file = "aihw-health-expenditure-2022-23.xlsx",
+        sheet = input$sheet_name
+      )
     } else {
       df_aihw <- fn_clean_aihw(file = input$aihw_file, sheet = input$sheet_name)
     }
@@ -243,7 +244,7 @@ server <- function(input, output) {
     react_aihw <- data_aihw_out()
     cols_numeric <- react_aihw |> select(where(is.numeric)) |> colnames()
     react_aihw |>
-      wrap_reactable(
+      reactable(
         columns = map(cols_numeric, ~ colDef(
           format = colFormat(digits = 2)
         )) |>
@@ -253,8 +254,6 @@ server <- function(input, output) {
             tags$span(value, style = "white-space: normal;")
           }
         ),
-        table_id = NULL,
-        downloadable = FALSE,
         pagination = FALSE
       )
   })
